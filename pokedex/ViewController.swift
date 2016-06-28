@@ -15,8 +15,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.collection.delegate = self
-        self.collection.dataSource = self
+        collection.delegate = self
+        collection.dataSource = self
         
         
     }
@@ -24,9 +24,12 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         if let cell = collectionView.dequeueReusableCellWithReuseIdentifier("PokeCell", forIndexPath: indexPath) as? PokeCell {
             
+            let pokemon = Pokemon(name: "Test", pokedexId: indexPath.row)
+            cell.configureCell(pokemon)
+            
             return cell
+            
         } else {
-            print("else")
             return UICollectionViewCell()
         }
         
@@ -37,7 +40,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 30
+        return 717
     }
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
@@ -45,7 +48,11 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return CGSizeMake(105, 105)
+        return CGSizeMake(determineImageSizeDependingOnScreen(), determineImageSizeDependingOnScreen())
+    }
+    
+    func determineImageSizeDependingOnScreen() -> CGFloat {
+        return (UIScreen.mainScreen().bounds.width / 4)
     }
 
     
