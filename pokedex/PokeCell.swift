@@ -1,14 +1,14 @@
 //
-//  PokeCellCollectionViewCell.swift
+//  PokeCell.swift
 //  pokedex
 //
-//  Created by Tonni Hyldgaard on 6/19/16.
+//  Created by Tonni Hyldgaard on 6/28/16.
 //  Copyright © 2016 Tonni Hyldgaard. All rights reserved.
 //
 
 import UIKit
 
-class PokeCellCollectionViewCell: UICollectionViewCell {
+class PokeCell: UICollectionViewCell {
     @IBOutlet weak var thumbImg: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     
@@ -21,4 +21,5 @@ class PokeCellCollectionViewCell: UICollectionViewCell {
         thumbImg.image = UIImage(named: "\(self.pokemon.pokedexId)")
         
     }
+    
 }
