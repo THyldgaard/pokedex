@@ -4,6 +4,11 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <mutableArray key="PokemonSolid.ttf">
+            <string>PokemonSolidNormal</string>
+        </mutableArray>
+    </customFonts>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -22,9 +27,44 @@
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gbl-t8-PoQ">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="55"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fba-Ac-aDE">
+                                        <rect key="frame" x="546" y="13" width="46" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="46" id="e1h-am-Soh"/>
+                                            <constraint firstAttribute="height" constant="30" id="xCC-Z3-Thl"/>
+                                        </constraints>
+                                        <state key="normal" title="Mute"/>
+                                        <connections>
+                                            <action selector="musicButtonPress:" destination="BYZ-38-t0r" eventType="touchUpInside" id="nSQ-6m-WsN"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pokemon" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ebJ-Z0-dgq">
+                                        <rect key="frame" x="230" y="11" width="140" height="34"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="34" id="BBk-PS-f93"/>
+                                            <constraint firstAttribute="width" constant="168" id="WGP-yN-EaQ"/>
+                                            <constraint firstAttribute="width" constant="140" id="eyu-4b-2Db"/>
+                                            <constraint firstAttribute="height" constant="38" id="iFO-qD-gdW"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="PokemonSolidNormal" family="Pokemon Solid" pointSize="30"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="WGP-yN-EaQ"/>
+                                                <exclude reference="iFO-qD-gdW"/>
+                                            </mask>
+                                        </variation>
+                                    </label>
+                                </subviews>
                                 <color key="backgroundColor" red="1" green="0.34509803921568627" blue="0.33333333333333331" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
+                                    <constraint firstItem="ebJ-Z0-dgq" firstAttribute="centerY" secondItem="gbl-t8-PoQ" secondAttribute="centerY" id="4Vm-Uc-P1o"/>
                                     <constraint firstAttribute="height" constant="55" id="PNX-T8-hxk"/>
+                                    <constraint firstItem="fba-Ac-aDE" firstAttribute="top" secondItem="gbl-t8-PoQ" secondAttribute="top" constant="13" id="cnu-uK-2Jh"/>
+                                    <constraint firstItem="ebJ-Z0-dgq" firstAttribute="centerX" secondItem="gbl-t8-PoQ" secondAttribute="centerX" id="g0s-3J-grv"/>
+                                    <constraint firstAttribute="trailing" secondItem="fba-Ac-aDE" secondAttribute="trailing" constant="8" id="qVN-eZ-pwl"/>
                                 </constraints>
                             </view>
                             <searchBar contentMode="redraw" ambiguous="YES" misplaced="YES" searchBarStyle="minimal" translatesAutoresizingMaskIntoConstraints="NO" id="soe-cL-nmE">

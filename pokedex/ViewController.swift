@@ -7,10 +7,14 @@
 //
 
 import UIKit
+import AVFoundation
 
 class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     @IBOutlet weak var collection: UICollectionView!
+    
+    var pokemon = [Pokemon]()
+    var musicPlayer: AVAudioPlayer!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,14 +22,35 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         collection.delegate = self
         collection.dataSource = self
         
+        initAudio()
+        parsePokemonCSV()
+        
+    }
+    
+    func parsePokemonCSV() {
+        guard let path = NSBundle.mainBundle().pathForResource("pokemon", ofType: "csv") else { return }
+        
+        do {
+            let csv = try CSV(contentsOfURL: path)
+            
+            let rows = csv.rows
+            
+            for row in rows {
+                guard let pokeId = row["id"], let id = Int(pokeId), let name = row["identifier"] else { return }
+                pokemon.append(Pokemon(name: name, pokedexId: id))
+                
+            }
+            
+        } catch let err as NSError {
+            print(err.debugDescription)
+        }
         
     }
 
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         if let cell = collectionView.dequeueReusableCellWithReuseIdentifier("PokeCell", forIndexPath: indexPath) as? PokeCell {
             
-            let pokemon = Pokemon(name: "Test", pokedexId: indexPath.row)
-            cell.configureCell(pokemon)
+            cell.configureCell(pokemon[indexPath.row])
             
             return cell
             
@@ -52,9 +77,36 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     }
     
     func determineImageSizeDependingOnScreen() -> CGFloat {
-        return (UIScreen.mainScreen().bounds.width / 4)
+        return 105
+        //return (UIScreen.mainScreen().bounds.width / 4)
     }
 
+    func initAudio() {
+        guard let path = NSBundle.mainBundle().pathForResource("music", ofType: "mp3") else { return }
+        
+        do {
+            if !path.isEmpty {
+                musicPlayer = try AVAudioPlayer(contentsOfURL: NSURL(string: path)!)
+            }
+            musicPlayer.prepareToPlay()
+            musicPlayer.numberOfLoops = -1
+            musicPlayer.play()
+            
+        } catch let err as NSError {
+            
+        }
+        
+    }
+    
+    @IBAction func musicButtonPress(sender: UIButton!) {
+        if musicPlayer.playing {
+            musicPlayer.stop()
+            sender.alpha = 0.2
+        } else {
+            musicPlayer.play()
+            sender.alpha = 1.0
+        }
+    }
     
 
 }
