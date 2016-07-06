@@ -187,6 +187,9 @@
                                             <constraint firstAttribute="width" constant="48" id="AQ5-FD-oJW"/>
                                         </constraints>
                                         <state key="normal" title="&lt; Back"/>
+                                        <connections>
+                                            <action selector="backButtonPressed:" destination="f7G-Z5-Y87" eventType="touchUpInside" id="sNa-Kj-kT2"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="0.34509803919999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
@@ -357,10 +360,10 @@
                             <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="wtp-u4-0LA">
                                 <rect key="frame" x="20" y="472" width="560" height="160"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="250" translatesAutoresizingMaskIntoConstraints="NO" id="FNw-aS-MVp">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="250" translatesAutoresizingMaskIntoConstraints="NO" id="FNw-aS-MVp">
                                         <rect key="frame" x="0.0" y="0.0" width="280" height="160"/>
                                     </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="115" translatesAutoresizingMaskIntoConstraints="NO" id="qj2-N0-U83">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="115" translatesAutoresizingMaskIntoConstraints="NO" id="qj2-N0-U83">
                                         <rect key="frame" x="280" y="0.0" width="280" height="160"/>
                                     </imageView>
                                 </subviews>
@@ -384,12 +387,23 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="baseAttackLbl" destination="n43-nP-CMY" id="gTY-ac-VBF"/>
+                        <outlet property="currentEvoLbl" destination="FNw-aS-MVp" id="jKn-Ot-Vka"/>
+                        <outlet property="defenceLbl" destination="YMw-Hg-eVe" id="MQg-6u-c7c"/>
+                        <outlet property="descriptionLbl" destination="kbt-qJ-CjA" id="2f8-wM-wdT"/>
+                        <outlet property="evoLbl" destination="9mb-o3-lbU" id="p4n-hf-tCW"/>
+                        <outlet property="heightlbl" destination="70e-bn-zfu" id="faH-W9-T9a"/>
+                        <outlet property="mainImg" destination="AiD-AD-CNB" id="Dl0-Z2-NxH"/>
                         <outlet property="nameLbl" destination="Ypn-9V-sVC" id="0uS-bZ-pgQ"/>
+                        <outlet property="nextEvoImg" destination="qj2-N0-U83" id="BJm-gI-OW0"/>
+                        <outlet property="pokedexLbl" destination="YMh-5v-6rh" id="UCv-Vl-zuK"/>
+                        <outlet property="typeLbl" destination="2U2-67-tN9" id="NEP-r4-f3w"/>
+                        <outlet property="weightLbl" destination="QnC-Xb-oJh" id="Uzb-yK-cPO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="u0Y-Yd-CI9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1220" y="389"/>
+            <point key="canvasLocation" x="1031" y="389"/>
         </scene>
     </scenes>
     <resources>
