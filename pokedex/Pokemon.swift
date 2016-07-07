@@ -8,6 +8,7 @@
 
 import Foundation
 import Alamofire
+import SwiftyJSON
 
 class Pokemon {
     private(set) var name: String!
@@ -35,16 +36,22 @@ class Pokemon {
             .responseJSON { response in
                 switch response.result {
                 case .Success:
-                    if let dict = response.result.value as? Dictionary<String, AnyObject> {
-                        //print(dict.values)
-                        if let weight = dict["weight"] as? Int {
-                            self.weight = "\(weight)"
-                        }
-                        if let height = dict["height"] as? Int {
-                            self.height = "\(height)"
-                        }
-                                                
+                    if let jsonData = response.result.value {
+                        let json = JSON(jsonData)
+                        print(json)
                     }
+                    //                    if let dict = response.result.value as? Dictionary<String, AnyObject> {
+//                        //print(dict.values)
+//                        if let weight = dict["weight"] as? Int {
+//                            self.weight = "\(weight)"
+//                        }
+//                        if let height = dict["height"] as? Int {
+//                            self.height = "\(height)"
+//                        }
+//                      
+//                        print(self.weight)
+//                        
+//                    }
                     
                 case .Failure(let err):
                     print(err)
