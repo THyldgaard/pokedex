@@ -74,6 +74,7 @@ class Pokemon {
                                 }
                                 
                                 self.type = typeString
+                                print(self.type)
                             } else {
                                 self.type = ""
                                 print(json["types"].error)
