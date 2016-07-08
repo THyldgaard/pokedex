@@ -15,7 +15,7 @@ class Pokemon {
     private(set) var pokedexId: Int!
     private(set) var description: String!
     private(set) var type: String!
-    private(set) var defence: String!
+    private(set) var defense: String!
     private(set) var height: String!
     private(set) var weight: String!
     private(set) var attack: String!
@@ -38,21 +38,50 @@ class Pokemon {
                 case .Success:
                     if let jsonData = response.result.value {
                         let json = JSON(jsonData)
-                        print(json)
+                        
+                        if json.count > 0 {
+                            if let weight = json["weight"].number {
+                                self.weight = "\(weight)"
+                            } else  {
+                                print(json["weight"].error)
+                            }
+                            
+                            if let height = json["height"].number {
+                                self.height = "\(height)"
+                            } else {
+                                print(json["height"].error)
+                            }
+                            
+                            if let attack = json["stats"][4]["base_stat"].number {
+                                self.attack = "\(attack)"
+                            } else {
+                                print(json["stats"][4]["base_stat"].error)
+                            }
+                            
+                            if let defense = json["stats"][3]["base_stat"].number {
+                                self.defense = "\(defense)"
+                            } else {
+                                print(json["stats"][3]["base_stat"].error)
+                            }
+                            
+                            if let types = json["types"].array where types.count > 0 {
+                                var typeString = "\(types[0]["type"]["name"])".capitalizedString
+                                
+                                if types.count > 1 {
+                                    for i in 1..<types.count {
+                                        typeString += " / \(types[i]["type"]["name"])".capitalizedString
+                                    }
+                                }
+                                
+                                self.type = typeString
+                            } else {
+                                self.type = ""
+                                print(json["types"].error)
+                            }
+
+                        }
+                        
                     }
-                    //                    if let dict = response.result.value as? Dictionary<String, AnyObject> {
-//                        //print(dict.values)
-//                        if let weight = dict["weight"] as? Int {
-//                            self.weight = "\(weight)"
-//                        }
-//                        if let height = dict["height"] as? Int {
-//                            self.height = "\(height)"
-//                        }
-//                      
-//                        print(self.weight)
-//                        
-//                    }
-                    
                 case .Failure(let err):
                     print(err)
                 }
