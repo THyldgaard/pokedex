@@ -40,36 +40,47 @@ class Pokemon {
                         let json = JSON(jsonData)
                         
                         if json.count > 0 {
-                            if let weight = json["weight"].number {
+                            if let weight = json["weight"].string {
                                 self.weight = "\(weight)"
                             } else  {
                                 print(json["weight"].error)
                             }
                             
-                            if let height = json["height"].number {
+                            if let height = json["height"].string {
                                 self.height = "\(height)"
                             } else {
                                 print(json["height"].error)
                             }
                             
-                            if let attack = json["stats"][4]["base_stat"].number {
+                            if let attack = json["attack"].number {
                                 self.attack = "\(attack)"
                             } else {
-                                print(json["stats"][4]["base_stat"].error)
+                                print(json["attack"].error)
                             }
                             
-                            if let defense = json["stats"][3]["base_stat"].number {
+                            if let defense = json["defense"].number {
                                 self.defense = "\(defense)"
                             } else {
-                                print(json["stats"][3]["base_stat"].error)
+                                print(json["defense"].error)
                             }
+//                            if let attack = json["stats"][4]["base_stat"].number {
+//                                self.attack = "\(attack)"
+//                            } else {
+//                                print(json["stats"][4]["base_stat"].error)
+//                            }
+//                            
+//                            if let defense = json["stats"][3]["base_stat"].number {
+//                                self.defense = "\(defense)"
+//                            } else {
+//                                print(json["stats"][3]["base_stat"].error)
+//                            }
                             
                             if let types = json["types"].array where types.count > 0 {
-                                var typeString = "\(types[0]["type"]["name"])".capitalizedString
+                                var typeString = "\(types[0]["name"])".capitalizedString
                                 
                                 if types.count > 1 {
                                     for i in 1..<types.count {
-                                        typeString += " / \(types[i]["type"]["name"])".capitalizedString
+                                        typeString += " / \(types[i]["name"])".capitalizedString
                                     }
                                 }
                                 
@@ -79,9 +90,35 @@ class Pokemon {
                                 self.type = ""
                                 print(json["types"].error)
                             }
-
+                            
+                            //print(json)
+                            print(self.height)
+                            print(self.weight)
+                            print(self.attack)
+                            print(self.defense)
+                            if let descriptions = json["descriptions"].array where descriptions.count > 0 {
+                                
+                                if let url = descriptions[0]["resource_uri"].string {
+                                    guard let nsUrl = NSURL(string: "\(URL_BASE)\(url)") else { return }
+                                    Alamofire.request(.GET, nsUrl)
+                                        .validate()
+                                        .responseJSON() { descResponse in
+                                            switch descResponse.result {
+                                            case .Success:
+                                                if let responseValue = descResponse.result.value {
+                                                    let descriptionJson = JSON(responseValue)
+                                                    print(descriptionJson["description"])
+                                                }
+                                            case .Failure(let err):
+                                                print(err)
+                                                
+                                            }
+                                    }
+                                }
+                            } else {
+                                self.description = ""
+                            }
                         }
-                        
                     }
                 case .Failure(let err):
                     print(err)

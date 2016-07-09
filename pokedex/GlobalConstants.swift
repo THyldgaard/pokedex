@@ -9,6 +9,6 @@
 import Foundation
 
 let URL_BASE: String = "https://pokeapi.co"
-let URL_POKEMON: String = "/api/v2/pokemon/"
+let URL_POKEMON: String = "/api/v1/pokemon/"
 
 typealias DownloadComplete = () -> Void
