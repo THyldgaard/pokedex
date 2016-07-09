@@ -31,7 +31,7 @@ class Pokemon {
         self.resourceUrl = "\(URL_BASE)\(URL_POKEMON)\(self.pokedexId)"
     }
     
-    func downloadPokemonDetails(complete: DownloadComplete) {
+    func downloadPokemonDetails(completed: DownloadComplete) {
         guard let url = NSURL(string: self.resourceUrl) else { return }
         Alamofire.request(.GET, url)
             .validate()
@@ -83,7 +83,10 @@ class Pokemon {
                             
                             // support some, but not all mega pokemon yet.
                             if evovleTo.rangeOfString("mega") == nil {
-                                guard let uri = evolution[0]["resource_uri"].string else { return }
+                                guard let uri = evolution[0]["resource_uri"].string else {
+                                    self.nextEvolutionId = ""
+                                    return
+                                }
                                 let preNum = uri.stringByReplacingOccurrencesOfString("/api/v1/pokemon/", withString: "")
                                 self.nextEvolutionId = preNum.stringByReplacingOccurrencesOfString("/", withString: "")
                             }
@@ -104,6 +107,8 @@ class Pokemon {
                                     case .Failure(let err):
                                         print(err)
                                     }
+                                    
+                                    completed()
                             }
                         }
                     }
