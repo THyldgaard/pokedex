@@ -19,6 +19,8 @@ class Pokemon {
     private(set) var height: String!
     private(set) var weight: String!
     private(set) var attack: String!
+    private(set) var nextEvolutionId: String!
+    private(set) var nextEvolutionLevel: String!
     private(set) var nextEvolutionText: String!
     private(set) var resourceUrl: String!
     
@@ -39,106 +41,73 @@ class Pokemon {
                     if let jsonData = response.result.value {
                         let json = JSON(jsonData)
                         
-                        if json.count > 0 {
-                            if let weight = json["weight"].string {
-                                self.weight = "\(weight)"
-                            } else  {
+                        if !json.isEmpty {
+                            guard let weight = json["weight"].string else  {
                                 print(json["weight"].error)
-                            }
-                            
-                            if let height = json["height"].string {
-                                self.height = "\(height)"
-                            } else {
-                                print(json["height"].error)
-                            }
-                            
-                            if let attack = json["attack"].number {
-                                self.attack = "\(attack)"
-                            } else {
-                                print(json["attack"].error)
-                            }
-                            
-                            if let defense = json["defense"].number {
-                                self.defense = "\(defense)"
-                            } else {
-                                print(json["defense"].error)
-                            }
-//                            if let attack = json["stats"][4]["base_stat"].number {
-//                                self.attack = "\(attack)"
-//                            } else {
-//                                print(json["stats"][4]["base_stat"].error)
-//                            }
-//                            
-//                            if let defense = json["stats"][3]["base_stat"].number {
-//                                self.defense = "\(defense)"
-//                            } else {
-//                                print(json["stats"][3]["base_stat"].error)
-//                            }
-                            
-                            if let types = json["types"].array where types.count > 0 {
-                                var typeString = "\(types[0]["name"])".capitalizedString
-                                
-                                if types.count > 1 {
-                                    for i in 1..<types.count {
-                                        typeString += " / \(types[i]["name"])".capitalizedString
-                                    }
-                                }
-                                
-                                self.type = typeString
-                                print(self.type)
-                            } else {
-                                self.type = ""
-                                print(json["types"].error)
-                            }
-                            
-                            //print(json)
-                            print(self.height)
-                            print(self.weight)
-                            print(self.attack)
-                            print(self.defense)
-                            if let descriptions = json["descriptions"].array where descriptions.count > 0 {
-                                if let url = descriptions[0]["resource_uri"].string {
-                                    guard let nsUrl = NSURL(string: "\(URL_BASE)\(url)") else { return }
-                                    Alamofire.request(.GET, nsUrl)
-                                        .validate()
-                                        .responseJSON() { descResponse in
-                                            switch descResponse.result {
-                                            case .Success:
-                                                if let responseValue = descResponse.result.value {
-                                                    let descriptionJson = JSON(responseValue)
-                                                    if let description = descriptionJson["description"].string {
-                                                        self.description = description
-                                                    } else {
-                                                        print(descriptionJson["description"].error)
-                                                    }
-                                                }
-                                            case .Failure(let err):
-                                                print(err)
-                                                
-                                            }
-                                    }
-                                }
-                            } else {
-                                self.description = ""
-                            }
-                            
-                            if let evolution = json["evolutions"].array where evolution.count > 0 {
-                                if let evovleTo = evolution[0]["to"].string {
-                                    // support some, but not all mega pokemon yet.
-                                    if evovleTo.rangeOfString("mega") == nil {
-                                        
-                                    } else {
-                                        if evovleTo.containsString("meganium") || evovleTo.containsString("yanmega") {
-                                            
-                                        } else {
-                                            return
-                                        }
-                                    }
-                                } else  {
-                                    print(evolution[0]["to"].error)
-                                }
-                            } else {
                                 return
+                            }
+                            
+                            guard let height = json["height"].string else {
+                                print(json["height"].error)
+                                return
+                            }
+                            
+                            guard let attack = json["attack"].number else {
+                                print(json["attack"].error)
+                                return
+                            }
+                            
+                            guard let defense = json["defense"].number else {
+                                print(json["attack"].error)
+                                return
+                            }
+                            
+                            guard let types = json["types"].array where types.count > 0 else {return}
+                            var typeString = types[0]["name"].stringValue.capitalizedString
+                            for i in 1..<types.count where types.count > 1 {
+                                typeString += " / \(types[i]["name"])".capitalizedString
+                            }
+                            
+                            guard let evolution = json["evolutions"].array where evolution.count > 0,
+                                let evovleTo = evolution[0]["to"].string,
+                                let level = evolution[0]["level"].number
+                                else { return }
+                            
+                            self.weight = "\(weight)"
+                            self.height = "\(height)"
+                            self.attack = "\(attack)"
+                            self.defense = "\(defense)"
+                            self.type = typeString
+                            self.nextEvolutionText = evovleTo
+                            self.nextEvolutionLevel = "\(level)"
+                            
+                            // support some, but not all mega pokemon yet.
+                            if evovleTo.rangeOfString("mega") == nil {
+                                self.nextEvolutionId = self.determineNextEvolutionId(evolution[0]["resource_uri"].string)
+                            } else {
+                                if evovleTo.containsString("meganium") || evovleTo.containsString("yanmega") {
+                                    self.determineNextEvolutionId(evolution[0]["resource_uri"].string)
+                                } else {
+                                    self.nextEvolutionId = ""
+                                }
+                            }
+                            
+                            guard let descriptions = json["descriptions"].array where descriptions.count > 0,
+                                let url = descriptions[0]["resource_uri"].string,
+                                let nsUrl = NSURL(string: "\(URL_BASE)\(url)")
+                                else { return }
+                            Alamofire.request(.GET, nsUrl)
+                                .validate()
+                                .responseJSON() { descriptionResponse in
+                                    switch descriptionResponse.result {
+                                    case .Success:
+                                        guard let responseValue = descriptionResponse.result.value else { return }
+                                        let descriptionJson = JSON(responseValue)
+                                        guard let description = descriptionJson["description"].string else { return }
+                                        self.description = description
+                                    case .Failure(let err):
+                                        print(err)
+                                    }
                             }
                         }
                     }
@@ -146,6 +115,12 @@ class Pokemon {
                     print(err)
                 }
         }
+    }
+    
+    func determineNextEvolutionId(levelURILink: String?) -> String {
+        guard let uri = levelURILink else { return "" }
+        let preNum = uri.stringByReplacingOccurrencesOfString("/api/v1/pokemon/", withString: "")
+        return preNum.stringByReplacingOccurrencesOfString("/", withString: "")
     }
     
 }
