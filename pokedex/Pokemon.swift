@@ -97,7 +97,6 @@ class Pokemon {
                             print(self.attack)
                             print(self.defense)
                             if let descriptions = json["descriptions"].array where descriptions.count > 0 {
-                                
                                 if let url = descriptions[0]["resource_uri"].string {
                                     guard let nsUrl = NSURL(string: "\(URL_BASE)\(url)") else { return }
                                     Alamofire.request(.GET, nsUrl)
@@ -107,7 +106,11 @@ class Pokemon {
                                             case .Success:
                                                 if let responseValue = descResponse.result.value {
                                                     let descriptionJson = JSON(responseValue)
-                                                    print(descriptionJson["description"])
+                                                    if let description = descriptionJson["description"].string {
+                                                        self.description = description
+                                                    } else {
+                                                        print(descriptionJson["description"].error)
+                                                    }
                                                 }
                                             case .Failure(let err):
                                                 print(err)
@@ -117,6 +120,25 @@ class Pokemon {
                                 }
                             } else {
                                 self.description = ""
+                            }
+                            
+                            if let evolution = json["evolutions"].array where evolution.count > 0 {
+                                if let evovleTo = evolution[0]["to"].string {
+                                    // support some, but not all mega pokemon yet.
+                                    if evovleTo.rangeOfString("mega") == nil {
+                                        
+                                    } else {
+                                        if evovleTo.containsString("meganium") || evovleTo.containsString("yanmega") {
+                                            
+                                        } else {
+                                            return
+                                        }
+                                    }
+                                } else  {
+                                    print(evolution[0]["to"].error)
+                                }
+                            } else {
+                                return
                             }
                         }
                     }
