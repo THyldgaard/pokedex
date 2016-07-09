@@ -83,13 +83,9 @@ class Pokemon {
                             
                             // support some, but not all mega pokemon yet.
                             if evovleTo.rangeOfString("mega") == nil {
-                                self.nextEvolutionId = self.determineNextEvolutionId(evolution[0]["resource_uri"].string)
-                            } else {
-                                if evovleTo.containsString("meganium") || evovleTo.containsString("yanmega") {
-                                    self.determineNextEvolutionId(evolution[0]["resource_uri"].string)
-                                } else {
-                                    self.nextEvolutionId = ""
-                                }
+                                guard let uri = evolution[0]["resource_uri"].string else { return }
+                                let preNum = uri.stringByReplacingOccurrencesOfString("/api/v1/pokemon/", withString: "")
+                                self.nextEvolutionId = preNum.stringByReplacingOccurrencesOfString("/", withString: "")
                             }
                             
                             guard let descriptions = json["descriptions"].array where descriptions.count > 0,
@@ -115,12 +111,6 @@ class Pokemon {
                     print(err)
                 }
         }
-    }
-    
-    func determineNextEvolutionId(levelURILink: String?) -> String {
-        guard let uri = levelURILink else { return "" }
-        let preNum = uri.stringByReplacingOccurrencesOfString("/api/v1/pokemon/", withString: "")
-        return preNum.stringByReplacingOccurrencesOfString("/", withString: "")
     }
     
 }
